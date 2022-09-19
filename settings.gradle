@@ -1,0 +1,24 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'https://gitee.com/wang_ziheng/libcommon/raw/master/repository/'
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'https://gitee.com/wang_ziheng/libcommon/raw/master/repository/'
+        }
+    }
+}
+rootProject.name = "CameraUVCTest"
+include ':app'
