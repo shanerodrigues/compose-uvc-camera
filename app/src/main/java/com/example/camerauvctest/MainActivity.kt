@@ -167,8 +167,8 @@ fun rememberCameraClient(context: Context): CameraClient = remember {
         setCameraRequest(
             CameraRequest.Builder()
                 .setFrontCamera(false)
-                .setPreviewWidth(960)
-                .setPreviewHeight(720)
+                .setPreviewWidth(640)
+                .setPreviewHeight(480)
                 .create()
         )
         openDebug(true)
