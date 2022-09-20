@@ -54,7 +54,10 @@ android {
 
 dependencies {
 
+    //ANDROIDUSBCAMERA - CAMERA ENGINE
     implementation 'com.github.jiangdongguo.AndroidUSBCamera:libausbc:3.2.8'
+
+    //PERMISSIONS
     implementation "com.google.accompanist:accompanist-permissions:0.25.0"
 
 

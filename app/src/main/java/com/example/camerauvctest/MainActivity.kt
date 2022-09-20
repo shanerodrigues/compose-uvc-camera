@@ -1,6 +1,9 @@
 package com.example.camerauvctest
 
-import android.annotation.SuppressLint
+import com.jiangdg.ausbc.CameraClient
+import com.jiangdg.ausbc.camera.CameraUvcStrategy
+import com.jiangdg.ausbc.camera.bean.CameraRequest
+import com.jiangdg.ausbc.widget.AspectRatioSurfaceView
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -22,10 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.camerauvctest.ui.theme.CameraUVCTestTheme
 import com.google.accompanist.permissions.*
-import com.jiangdg.ausbc.CameraClient
-import com.jiangdg.ausbc.camera.CameraUvcStrategy
-import com.jiangdg.ausbc.camera.bean.CameraRequest
-import com.jiangdg.ausbc.widget.AspectRatioSurfaceView
+import com.jiangdg.ausbc.callback.ICaptureCallBack
+import com.jiangdg.ausbc.utils.ToastUtils
+import androidx.compose.foundation.layout.Arrangement
 
 class MainActivity : ComponentActivity() {
 
@@ -40,7 +42,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-//                    Text("shane")
                     RequestMultiplePermissions(
                         permissions = listOf(
                             android.Manifest.permission.CAMERA,
@@ -79,7 +80,6 @@ fun RequestMultiplePermissions(
             )
         },
         content = {
-//            Toast.makeText(LocalContext.current, "Permission granted successfully", Toast.LENGTH_SHORT).show()
             Content(
                 text = "PERMISSION GRANTED!",
                 showButton = false
@@ -102,7 +102,8 @@ private fun HandleRequests(
     }
     if (result) {
         Toast.makeText(LocalContext.current, "Permission granted successfully", Toast.LENGTH_SHORT).show()
-        YourApp()
+//        YourApp()
+        MyApp()
     } else {
         deniedContent(shouldShowRationale)
     }
@@ -177,13 +178,12 @@ fun rememberCameraClient(context: Context): CameraClient = remember {
 
 
 @Composable
-fun YourApp() {
+fun MyApp(){
     val context = LocalContext.current
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxWidth()) {
         UVCCameraPreview(rememberCameraClient(context))
     }
 }
-
 
 @Composable
 fun UVCCameraPreview(cameraClient : CameraClient) {
@@ -211,8 +211,41 @@ fun UVCCameraPreview(cameraClient : CameraClient) {
             }
         }
     ) {
-
     }
+    var currentContext = LocalContext.current
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Button(onClick = {captureImage(cameraClient, currentContext)}) {
+            Text("Take Picture")
+        }
+    }
+
+}
+
+fun captureImage(cameraClient: CameraClient, context:Context){
+
+    cameraClient.captureImage(object : ICaptureCallBack {
+        override fun onBegin() {
+            Toast.makeText(context, "onBegin", Toast.LENGTH_SHORT).show()
+            Log.i("CameraClient", "onBegin")
+
+        }
+
+        override fun onError(error: String?) {
+            Toast.makeText(context, "onError", Toast.LENGTH_SHORT).show()
+            ToastUtils.show(error ?: "未知异常")
+            Log.i("CameraClient", "onError")
+        }
+
+        override fun onComplete(path: String?) {
+            Toast.makeText(context, "onComplete", Toast.LENGTH_SHORT).show()
+            ToastUtils.show("OnComplete")
+            Log.i("CameraClient", "onComplete")
+        }
+    })
 }
 
 
